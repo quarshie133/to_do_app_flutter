@@ -17,6 +17,18 @@ class _HomePageState extends State<HomePage> {
 
   ToDODataBase db = ToDODataBase();
 
+  @override
+  void initState() {
+    // if this is the first time ever opening the app, then create default data
+    if (_myBox.get("TODOLIST") == null) {
+      db.createInitialData();
+    } else {
+      //there already exists data
+      db.loadData();
+    }
+    super.initState();
+  }
+
   // text controller
   final _controller = TextEditingController();
 
@@ -25,6 +37,7 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       db.toDoList[index][1] = !db.toDoList[index][1];
     });
+    db.updateDatabase();
   }
 
   // save new task
@@ -36,6 +49,7 @@ class _HomePageState extends State<HomePage> {
     });
 
     Navigator.of(context).pop();
+    db.updateDatabase();
   }
 
 // create new task
@@ -57,6 +71,7 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       db.toDoList.removeAt(index);
     });
+    db.updateDatabase();
   }
 
   @override
